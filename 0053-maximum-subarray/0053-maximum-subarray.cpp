@@ -1,13 +1,48 @@
 class Solution {
 public:
-int maxSubArray(vector<int>& nums) {
-    int max_so_far = nums[0];
-    int current_max = nums[0];
-    for (int i = 1; i < nums.size(); i++) {
-        current_max = max(nums[i], current_max + nums[i]);
-        max_so_far = max(max_so_far, current_max);
+int maxCrossingSubarraySum(const vector<int>& nums, int left, int mid, int right) {
+    int leftSum = INT_MIN;
+    int rightSum = INT_MIN;
+    int sum = 0;
+
+    for (int i = mid; i >= left; i--) {
+        sum += nums[i];
+        if (sum > leftSum) {
+            leftSum = sum;
+        }
     }
-    return max_so_far;
+
+    sum = 0;
+    for (int i = mid + 1; i <= right; i++) {
+        sum += nums[i];
+        if (sum > rightSum) {
+            rightSum = sum;
+        }
+    }
+
+    return leftSum + rightSum;
 }
+
+int maxSubArrayHelper(const vector<int>& nums, int left, int right) {
+    if (left == right) {
+        return nums[left];
+    }
+
+    int mid = left + (right - left) / 2;
+
+    int leftMax = maxSubArrayHelper(nums, left, mid);
+    int rightMax = maxSubArrayHelper(nums, mid + 1, right);
+    int crossMax = maxCrossingSubarraySum(nums, left, mid, right);
+
+    return max({leftMax, rightMax, crossMax});
+}
+
+int maxSubArray(vector<int>& nums) {
+    if (nums.empty()) {
+        return INT_MIN;
+    }
+    return maxSubArrayHelper(nums, 0, nums.size() - 1);
+}
+
 
 };
