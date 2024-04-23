@@ -15,7 +15,6 @@ int maxSubArrayRecursive(vector<int>& nums, int start, int end, vector<int>& mem
 }
 
 int maxSubArray(vector<int>& nums) {
-    if (nums.size() == 0) return INT_MIN + 1;
     vector<int> memo(nums.size(), -1);
     return maxSubArrayRecursive(nums, 0, nums.size() - 1, memo);
 }
